@@ -39,7 +39,7 @@ mongoose.Schema({
 //create Signup Model
 const SignUp=mongoose.model('SignUp',signupSchema)
 
-//post API
+//SignUp API
 app.post('/api/signup',async(req,res)=>{
     try{
         const {User_Name,Email,Password}=req.body;
@@ -65,6 +65,34 @@ app.post('/api/signup',async(req,res)=>{
                 console.log(error);
                 res.status(500).json({message:"error creating User"});
                 
+    }
+})
+
+//Login Api
+
+app.post('/api/login',async(req,res)=>{
+    try{
+        const {Email,Password}=req.body;
+        if(!Email || !Password){
+            return res.status(400).json({message:"Email and Password Both are required!..."});
+        }
+        //find the signup email
+
+        const exitinguser=await SignUp.findOne({Email});
+        // const exitingpass=await SignUp.findOne({Password})
+        if(!exitinguser){
+            return res.status(400).json({message:"Email not Found!..."});
+        }
+        if(exitinguser.Password!=Password){
+            return res.status(400).json({message:"Worng Password not Found!..."});
+            
+        }
+        res.status(200).json({message:"Login Suceessfully!...",SignUp:exitinguser})
+
+    }
+    catch(error){
+        console.log('Error during login',error);
+        res.status(500).json({message:"Error During Login"})
     }
 })
 
