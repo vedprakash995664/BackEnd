@@ -146,6 +146,31 @@ app.get('/api/signup/active',async(req,res)=>{
 })
 
 
+//Edit api
+
+app.put('/api/edit/:id',async(req,res)=>{
+    try {
+        const {id}=req.params;
+        const updateData=req.body
+        //find id and update
+        const updateUser=await SignUp.findByIdAndUpdate(id,updateData,
+            {new:true,runValidators:true}
+        );
+        if(!updateUser){
+            return res.status(404).json({message:"user not found"})
+        }
+        if(existingUser.Status!=="Active"){            
+            return res.status(400).json({message:"You are not Active"});
+        }
+        res.status(200).json({message:"User Updated successfully!..",updateUser})
+    } catch (error) {
+        console.log("error");
+        res.status(500).json({message:"Error during update"})
+        
+    }
+})
+
+
 
 app.listen(3000,()=>{
     console.log(`Server is running at port 3000`);

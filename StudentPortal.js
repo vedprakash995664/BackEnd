@@ -98,6 +98,50 @@ catch(error){
 }
 })
 
+// Api Get :-
+
+studentPortal.get('/api/getdata',async (req,res)=>
+    {
+        try{
+            const form = await  register.find();
+            res.status(200).json(form);
+        }
+        catch(error){
+            console.log(error)
+            res.status(500).json({message:"Error  Fetching Data."})
+    
+        }
+    });
+
+
+    // Delete the data form database 
+
+    studentPortal.delete('/api/delete/:id',async(req,res) =>
+    {
+        try{
+            const {id}= req.params;
+    
+            // Find the User
+            const  deletedform = await register.findByIdAndDelete(id);
+            if(!deletedform)
+            {
+                res.status(400).json({message : "User not Found"})
+            }
+            res.status(200).json({message:"Data Deleted Succefully.",register:deletedform});
+    
+        }
+        catch(error){
+            console.log(error);
+            res.status(500).json({message:"Error deleting user"})
+        }
+    });
+
+
+
+
+
+
+
 studentPortal.listen(3001,()=>{
     console.log(`server running at port 3001`);
 })
